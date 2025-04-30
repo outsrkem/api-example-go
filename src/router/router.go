@@ -7,7 +7,7 @@ import (
 func midare(r *gin.Engine) {
 	r.Use(RequestIDMiddleware())
 	r.Use(RequestRrecorder())
-	r.Use(CustomLogFormat())
+	// r.Use(CustomLogFormat())
 }
 
 func Index(r *gin.Engine) {

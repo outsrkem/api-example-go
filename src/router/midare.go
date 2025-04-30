@@ -1,12 +1,12 @@
 package router
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/outsrkem/api-example-go/src/logger"
 )
 
 func RequestIDMiddleware() gin.HandlerFunc {
@@ -23,30 +23,11 @@ func RequestIDMiddleware() gin.HandlerFunc {
 
 func RequestRrecorder() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		klog := logger.FromContext(c)
+		start := time.Now()
 		c.Next()
+		stop := time.Now()
+		latency := stop.Sub(start)
+		klog.Infof("|%14s | %d |%7s %s", latency, c.Writer.Status(), c.Request.Method, c.Request.RequestURI)
 	}
-}
-
-func CustomLogFormat() gin.HandlerFunc {
-	return gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-		// 从上下文中获取 RequestID
-		requestID := "-"
-		if val, exists := param.Keys["RequestID"]; exists {
-			if id, ok := val.(string); ok {
-				requestID = id
-			}
-		}
-		// 自定义格式
-		return fmt.Sprintf("[%s] [%s] \"%s %s %s %d %s\" \"%s\" \n",
-			param.TimeStamp.Format(time.DateTime),
-			requestID,
-			param.Method,
-			param.Path,
-			param.Request.Proto,
-			param.StatusCode,
-			param.Latency,
-			param.ErrorMessage,
-		)
-	})
 }
