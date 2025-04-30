@@ -20,7 +20,7 @@ func (MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		b = &bytes.Buffer{}
 	}
-	asctime := entry.Time.Format(time.DateTime)
+	asctime := entry.Time.Format(time.DateTime + " -0700")
 	level := entry.Level.String()
 	var caller string
 	if entry.Caller != nil {
@@ -53,4 +53,9 @@ func FromContext(c *gin.Context) *logrus.Entry {
 		}
 	}
 	return logrus.WithFields(logrus.Fields{"requestID": requestID})
+}
+
+func NewLogrus() {
+	logrus.SetFormatter(&MyFormatter{})
+	logrus.SetLevel(logrus.DebugLevel)
 }

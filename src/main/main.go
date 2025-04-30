@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	logrus.SetFormatter(&logger.MyFormatter{})
+	logger.NewLogrus()
 }
 
 func main() {
